@@ -1,1 +1,10 @@
 ###
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "fistname":"akhil",
+    "lastname":"v a",
+    "email":"akhilva@gmail.com",
+    "phone":"237612537"
+}
