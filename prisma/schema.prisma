@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   
-  user_id           Int
+  user_id           Int       @id @default(autoincrement())
   first_name        String
   last_name         String
   email             String    @unique
@@ -29,12 +29,70 @@ model User {
   department_id     Int
   course_id         Int
 
-  department        Department? @relation(fields: [department_id],  references[department_id])
-  course            Course?     @relation(fields: [course_id],  references: [course_id])
+  department        Department?  @relation(fields: [department_id],  references:[department_id])
+  course            Course?      @relation(fields: [course_id],  references: [course_id])
 
   academicDetails     Academic_Detail[]
   professionaDetails  Professional_Detail[]
-  messages            Message[]
-  jobs                Job_Post[]
-  eventRegistration   Event_Registration
+}
+
+model Academic_Detail {
+  academic_id        Int    @id @default(autoincrement())
+  user_id            Int
+  prn_number         String @unique
+  graduation_year    Int?
+  degree_id          Int?
+  department_id      Int?
+  degree_certificate String?
+
+  user        User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  degree      Degree?    @relation(fields: [degree_id], references: [degree_id])
+  department  Department? @relation(fields: [department_id], references: [department_id])
+}
+
+model Degree {
+  degree_id   Int    @id @default(autoincrement())
+  degree_name String @unique
+  academicDetails Academic_Detail[]
+}
+
+model Department {
+  department_id   Int    @id @default(autoincrement())
+  department_name String @unique
+
+  users           User[]
+  academicDetails Academic_Detail[]
+  courses         Course[]
+}
+
+model Course {
+  course_id     Int    @id @default(autoincrement())
+  course_name   String
+  course_code   String
+  department_id Int
+  department    Department @relation(fields: [department_id], references: [department_id])
+  users         User[]
+}
+
+// ============ PROFESSIONAL ============
+
+model Professional_Detail {
+  professional_id   Int    @id @default(autoincrement())
+  user_id           Int
+  current_position  String?
+  company_name      String?
+  industry_id       Int?
+  work_email        String?
+  linkedin_profile  String?
+  key_skills        String?
+
+  user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  industry Industry? @relation(fields: [industry_id], references: [industry_id])
+}
+
+model Industry {
+  industry_id   Int    @id @default(autoincrement())
+  industry_name String @unique
+
+  professionals Professional_Detail[]
 }
