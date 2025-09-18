@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
- binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -15,84 +9,79 @@ datasource db {
 }
 
 model User {
-  
-  user_id           Int       @id @default(autoincrement())
-  first_name        String
-  last_name         String
-  email             String    @unique
-  phone_number      String
-  date_of_birth     DateTime
-  gender            String?
-  current_address   String?
-  password          String
-
-  department_id     Int
-  course_id         Int
-
-  department        Department?  @relation(fields: [department_id],  references:[department_id])
-  course            Course?      @relation(fields: [course_id],  references: [course_id])
-
-  academicDetails     Academic_Detail[]
-  professionaDetails  Professional_Detail[]
+  user_id            Int                   @id @default(autoincrement())
+  first_name         String
+  last_name          String
+  email              String                @unique
+  phone_number       String
+  date_of_birth      DateTime
+  gender             String?
+  current_address    String?
+  password           String
+  department_id      Int
+  course_id          Int
+  academicDetails    Academic_Detail[]
+  professionaDetails Professional_Detail[]
+  course             Course                @relation(fields: [course_id], references: [course_id])
+  department         Department            @relation(fields: [department_id], references: [department_id])
 }
 
 model Academic_Detail {
-  academic_id        Int    @id @default(autoincrement())
+  academic_id        Int         @id @default(autoincrement())
   user_id            Int
-  prn_number         String @unique
+  prn_number         String      @unique
   graduation_year    Int?
   degree_id          Int?
   department_id      Int?
   degree_certificate String?
-
-  user        User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  degree      Degree?    @relation(fields: [degree_id], references: [degree_id])
-  department  Department? @relation(fields: [department_id], references: [department_id])
+  degree             Degree?     @relation(fields: [degree_id], references: [degree_id])
+  department         Department? @relation(fields: [department_id], references: [department_id])
+  user               User        @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
 
 model Degree {
-  degree_id   Int    @id @default(autoincrement())
-  degree_name String @unique
-  academicDetails Academic_Detail[]
-}
-
-model Department {
-  department_id   Int    @id @default(autoincrement())
-  department_name String @unique
-
-  users           User[]
+  degree_id       Int               @id @default(autoincrement())
+  degree_name     String            @unique
   academicDetails Academic_Detail[]
   courses         Course[]
 }
 
+model Department {
+  department_id   Int               @id @default(autoincrement())
+  department_name String            @unique
+
+  academicDetails Academic_Detail[]
+  courses         Course[]
+  users           User[]
+}
+
 model Course {
-  course_id     Int    @id @default(autoincrement())
+  course_id     Int        @id @default(autoincrement())
   course_name   String
   course_code   String
   department_id Int
+  degree_id     Int
   department    Department @relation(fields: [department_id], references: [department_id])
+  degree        Degree     @relation(fields: [degree_id], references: [degree_id])
+
   users         User[]
 }
 
-// ============ PROFESSIONAL ============
-
 model Professional_Detail {
-  professional_id   Int    @id @default(autoincrement())
-  user_id           Int
-  current_position  String?
-  company_name      String?
-  industry_id       Int?
-  work_email        String?
-  linkedin_profile  String?
-  key_skills        String?
-
-  user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  industry Industry? @relation(fields: [industry_id], references: [industry_id])
+  professional_id  Int       @id @default(autoincrement())
+  user_id          Int
+  current_position String?
+  company_name     String?
+  industry_id      Int?
+  work_email       String?
+  linkedin_profile String?
+  key_skills       String?
+  industry         Industry? @relation(fields: [industry_id], references: [industry_id])
+  user             User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
 
 model Industry {
-  industry_id   Int    @id @default(autoincrement())
-  industry_name String @unique
-
+  industry_id   Int                   @id @default(autoincrement())
+  industry_name String                @unique
   professionals Professional_Detail[]
 }

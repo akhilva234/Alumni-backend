@@ -41,8 +41,12 @@ router.post('/register', async (req, res) => {
           gender,
           current_address,
           password: hashedPassword,
-          department_id,
-          course_id,
+          department:{
+            connect:{department_id:department_id}
+          },
+          course:{
+            connect:{course_id:course_id}
+          },
           date_of_birth: new Date(date_of_birth) 
         }
       })
@@ -52,8 +56,20 @@ router.post('/register', async (req, res) => {
           user_id: user.user_id,
           prn_number,
           graduation_year,
-          degree_id,
-          department_id
+          degree_id:degree_id,
+          department_id:department_id
+        }
+      })
+
+      await tx.professional_Detail.create({
+        data:{
+          user_id:user.user_id,
+          current_position,
+          company_name,
+          industry_id,
+          work_email,
+          linkedin_profile,
+          key_skills
         }
       })
 

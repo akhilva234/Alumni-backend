@@ -3,7 +3,7 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "fistname":"akhil",
+    "firstname":"akhil",
     "lastname":"v a",
     "email":"akhilva@gmail.com",
     "phone_number":"237612537",
@@ -13,8 +13,9 @@ Content-Type: application/json
     "password":"gilgamesh@123",
     "prn_number":"123456789102",
     "graduation_year":2012,
-    "degree_id":12,
+    "degree_id":1,
     "department_id":2,
+    "course_id":2,
     "current_position":"senior developer",
     "company_name":"utech",
     "industry_id":3,
