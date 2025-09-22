@@ -20,6 +20,7 @@ model User {
   password           String
   department_id      Int
   course_id          Int
+  approved_status     ApprovedStatus  @default(PENDING)
   academicDetails    Academic_Detail[]
   professionaDetails Professional_Detail[]
   course             Course                @relation(fields: [course_id], references: [course_id])
@@ -84,4 +85,10 @@ model Industry {
   industry_id   Int                   @id @default(autoincrement())
   industry_name String                @unique
   professionals Professional_Detail[]
+}
+
+enum ApprovedStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
