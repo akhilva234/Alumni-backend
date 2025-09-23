@@ -23,3 +23,12 @@ Content-Type: application/json
     "linkedin_profile":"https://ghsdygwd@linkedin.com",
     "key_skills":"kjkdwhck,jwdghjwdjh,kwhdcjge"
 }
+
+###
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "email":"safaev2004@gmail.com",
+    "password":"gilgamesh@123"
+}

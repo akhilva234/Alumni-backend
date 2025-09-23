@@ -25,9 +25,16 @@ export async function login(req,res,next) {
             user:data.user
         })
     }catch(err){
-        res.status(401).json({
-            message:"Login Failed",
-            error:err.message
-        })
+        if (err.message === "USER_NOT_FOUND") {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (err.message === "USER_PENDING") {
+      return res.status(401).json({ message: "Your account approval is pending" });
+    }
+    if (err.message === "INVALID_PASSWORD") {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    res.status(500).json({ message: "Server error",err:err.message });
     }
 }

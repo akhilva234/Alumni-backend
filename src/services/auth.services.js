@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import prisma from '../../prismaClient.js'
 import jwt from "jsonwebtoken";
+import { ApprovedStatus } from '@prisma/client';
 
 export async function register(UserData){
 
@@ -96,15 +97,35 @@ export async function register(UserData){
 
 }
 
-export async function login(UserData) {
-    const {email,password}=UserData
+export async function login(loginData) {
+    const {email,password}=loginData
 
     try{
         const user= await prisma.user.findUnique({
-            where:email
+            where:{email},
         })
+        
 
+        if (!user) {
+          throw new Error("USER_NOT_FOUND");
+        }
+
+        if (user.approved_status === "PENDING") {
+          throw new Error("USER_PENDING");
+        }
+
+
+        const validPassword = bcrypt.compareSync(password, user.password);
+        if (!validPassword) {
+          throw new Error("INVALID_PASSWORD");
+        }
+
+        const token = jwt.sign({id:user.user_id},process.env.JWT_SECRET_KEY,{expiresIn:"1h"})
+
+        return {token,user}
+        
     }catch(err){
+      throw err;
 
     }
     
