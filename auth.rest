@@ -35,10 +35,6 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/test/auth
-Headers:
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTA0NzA5MSwiZXhwIjoxNzU5MDUwNjkxfQ.xip_RJghc6GqKNHd8__4t3ud2F7vxY7SroMYOF8Z22g
-###
-GET http://localhost:5000/test/alumni
-Headers:
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTA0NzA5MSwiZXhwIjoxNzU5MDUwNjkxfQ.xip_RJghc6GqKNHd8__4t3ud2F7vxY7SroMYOF8Z22g
+GET http://localhost:5000/profile/miniprofile
+headers:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTA3MDQ2MywiZXhwIjoxNzU5MDc0MDYzfQ.XF8j3Q74yAlsFHr5e745mTL_EohasF9SsLfOkF9rBuA
