@@ -18,10 +18,11 @@ Content-Type: application/json
     "course_id":2,
     "current_position":"senior developer",
     "company_name":"utech",
-    "industry_id":3,
+    "industry_id":2,
     "work_email":"dwjedjk@gamil.com",
     "linkedin_profile":"https://ghsdygwd@linkedin.com",
-    "key_skills":"kjkdwhck,jwdghjwdjh,kwhdcjge"
+    "key_skills":"kjkdwhck,jwdghjwdjh,kwhdcjge",
+    "role":"ALUMNI"
 }
 
 ###
@@ -32,3 +33,12 @@ Content-Type: application/json
     "email":"safaev2004@gmail.com",
     "password":"gilgamesh@123"
 }
+
+###
+GET http://localhost:5000/test/auth
+Headers:
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTA0NzA5MSwiZXhwIjoxNzU5MDUwNjkxfQ.xip_RJghc6GqKNHd8__4t3ud2F7vxY7SroMYOF8Z22g
+###
+GET http://localhost:5000/test/alumni
+Headers:
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTA0NzA5MSwiZXhwIjoxNzU5MDUwNjkxfQ.xip_RJghc6GqKNHd8__4t3ud2F7vxY7SroMYOF8Z22g

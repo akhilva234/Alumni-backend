@@ -120,7 +120,7 @@ export async function login(loginData) {
           throw new Error("INVALID_PASSWORD");
         }
 
-        const token = jwt.sign({id:user.user_id},process.env.JWT_SECRET_KEY,{expiresIn:"1h"})
+        const token = jwt.sign({id:user.user_id,role:user.role},process.env.JWT_SECRET_KEY,{expiresIn:"1h"})
 
         return {token,user}
         

@@ -20,6 +20,8 @@ model User {
   password           String
   department_id      Int
   course_id          Int
+
+  role            Role            @default(ALUMNI)
   approved_status     ApprovedStatus  @default(PENDING)
   academicDetails    Academic_Detail[]
   professionaDetails Professional_Detail[]
@@ -85,6 +87,12 @@ model Industry {
   industry_id   Int                   @id @default(autoincrement())
   industry_name String                @unique
   professionals Professional_Detail[]
+}
+
+enum Role {
+  ADMIN
+  ALUMNI
+  FACULTY
 }
 
 enum ApprovedStatus {
