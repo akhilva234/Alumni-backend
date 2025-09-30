@@ -12,6 +12,7 @@ model User {
   user_id            Int                   @id @default(autoincrement())
   first_name         String
   last_name          String
+  user_photo         String? 
   email              String                @unique
   phone_number       String
   date_of_birth      DateTime
@@ -20,8 +21,11 @@ model User {
   password           String
   department_id      Int
   course_id          Int
+  is_blocked         Boolean              @default(false)
+
 
   role            Role            @default(ALUMNI)
+  marital_status  MaritalStatus   @default(Unmarried)
   approved_status     ApprovedStatus  @default(PENDING)
   academicDetails    Academic_Detail[]
   professionaDetails Professional_Detail[]
@@ -75,6 +79,7 @@ model Professional_Detail {
   user_id          Int
   current_position String?
   company_name     String?
+  experience       Int?          @default(0)
   industry_id      Int?
   work_email       String?
   linkedin_profile String?
@@ -93,10 +98,16 @@ enum Role {
   ADMIN
   ALUMNI
   FACULTY
+  RETD_FACULTY
 }
 
 enum ApprovedStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum MaritalStatus{
+  Married
+  Unmarried
 }

@@ -37,4 +37,4 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/profile/miniprofile
 headers:
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTA3MDQ2MywiZXhwIjoxNzU5MDc0MDYzfQ.XF8j3Q74yAlsFHr5e745mTL_EohasF9SsLfOkF9rBuA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTIzODM2NywiZXhwIjoxNzU5MjQxOTY3fQ.9HLzu0vrLP7cxyueJhjFYOcL6vsEX0RxkVcUH8EggzI
