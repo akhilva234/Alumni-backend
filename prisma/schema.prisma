@@ -28,7 +28,7 @@ model User {
   marital_status  MaritalStatus   @default(Unmarried)
   approved_status     ApprovedStatus  @default(PENDING)
   academicDetails    Academic_Detail[]
-  professionaDetails Professional_Detail[]
+  professionalDetails Professional_Detail[]
   course             Course                @relation(fields: [course_id], references: [course_id])
   department         Department            @relation(fields: [department_id], references: [department_id])
 }
@@ -38,6 +38,7 @@ model Academic_Detail {
   user_id            Int
   prn_number         String      @unique
   graduation_year    Int?
+  college_name       String?
   degree_id          Int?
   department_id      Int?
   degree_certificate String?

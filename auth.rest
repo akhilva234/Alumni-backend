@@ -38,3 +38,8 @@ Content-Type: application/json
 GET http://localhost:5000/profile/miniprofile
 headers:
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTIzODM2NywiZXhwIjoxNzU5MjQxOTY3fQ.9HLzu0vrLP7cxyueJhjFYOcL6vsEX0RxkVcUH8EggzI
+
+###
+GET  http://localhost:5000/profile/fullprofile
+headers:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTI0NjkxNSwiZXhwIjoxNzU5MjUwNTE1fQ.BrA11O1r8iJHdWbLCRupvjTCVnEHQA_0p3lbWp2m10s
