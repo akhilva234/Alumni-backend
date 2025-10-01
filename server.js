@@ -2,6 +2,7 @@ import express from 'express'
 import authRoutes from './src/routes/authRoutes.js'
 import testRoute from './src/routes/testRoutes.js'
 import userRoutes from './src/routes/userRoutes.js'
+import cors from "cors";
 
 const app =  express()
 
@@ -9,6 +10,7 @@ const app =  express()
 const PORT = process.env.PORT || 5000
 
 //middleware
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
