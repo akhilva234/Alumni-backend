@@ -1,0 +1,19 @@
+###
+GET  http://localhost:5000/department/deptdetails
+headers:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTMyMTIwMywiZXhwIjoxNzU5MzI0ODAzfQ.
+
+###
+GET  http://localhost:5000/courses/courselist?departmentId=2&degreeId=1
+headers:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTMyMzM2NiwiZXhwIjoxNzU5MzI2OTY2fQ.UlnBzFDBZQWPc0cjYCpfLaPqzjYKWO3CCH8jsW1PjP8
+
+###
+GET http://localhost:5000/degree/degreelist
+headers:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTMyMzM2NiwiZXhwIjoxNzU5MzI2OTY2fQ.UlnBzFDBZQWPc0cjYCpfLaPqzjYKWO3CCH8jsW1PjP8
+
+###
+GET http://localhost:5000/industries/industrylist
+headers:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFMVU1OSSIsImlhdCI6MTc1OTMyMzM2NiwiZXhwIjoxNzU5MzI2OTY2fQ.UlnBzFDBZQWPc0cjYCpfLaPqzjYKWO3CCH8jsW1PjP8
