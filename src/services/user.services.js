@@ -8,6 +8,8 @@ try{
         select:{
              first_name: true,
             last_name: true,
+            email:true,
+            role:true,
             academicDetails:{
 
                 select:{graduation_year: true},

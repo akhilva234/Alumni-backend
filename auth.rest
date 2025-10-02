@@ -3,25 +3,25 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "firstname":"safa mariyam",
-    "lastname":"e v",
-    "email":"safaev2004@gmail.com",
-    "phone_number":"9895344187",
-    "date_of_birth":"2004-09-29",
+    "firstName":"ratheesh",
+    "lastName":"e p",
+    "email":"raathev2004@gmail.com",
+    "phone":"9895344134",
+    "dob":"2004-09-29",
     "gender":"female",
-    "current_address":"uywegdjygduewdedwedwedwede",
+    "address":"uywegdjygduewdedwedwedwede",
     "password":"gilgamesh@123",
-    "prn_number":"123456789112",
-    "graduation_year":2012,
-    "degree_id":1,
-    "department_id":2,
-    "course_id":2,
-    "current_position":"senior developer",
-    "company_name":"utech",
-    "industry_id":2,
-    "work_email":"dwjedjk@gamil.com",
-    "linkedin_profile":"https://ghsdygwd@linkedin.com",
-    "key_skills":"kjkdwhck,jwdghjwdjh,kwhdcjge",
+    "prn":"123456789115",
+    "graduationYear":"2012",
+    "degree":"1",
+    "department":"2",
+    "course":"2",
+    "position":"senior developer",
+    "company":"utech",
+    "industry":"2",
+    "workEmail":"dwjeder@gamil.com",
+    "linkedin":"https://ghsdywrsd@linkedin.com",
+    "skills":"kjkdwhck,jwdghjwdjh,kwhdcjge",
     "role":"ALUMNI"
 }
 
@@ -31,5 +31,14 @@ Content-Type: application/json
 
 {
     "email":"safaev2004@gmail.com",
+    "password":"gilgamesh@123"
+}
+
+###
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "email":"raathev2004@gmail.com",
     "password":"gilgamesh@123"
 }

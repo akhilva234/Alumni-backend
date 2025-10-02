@@ -111,4 +111,5 @@ enum ApprovedStatus {
 enum MaritalStatus{
   Married
   Unmarried
+  Divorced
 }

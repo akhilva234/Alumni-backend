@@ -7,26 +7,37 @@ export async function register(UserData){
 
     try{
         const {
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       email,
-      phone_number,
-      gender,
-      current_address,
+      phone,
       password,
-      prn_number,
-      graduation_year,
-      degree_id,
-      department_id,
-      course_id,              
-      current_position,
-      company_name,
-      industry_id,
-      work_email,
-      linkedin_profile,
-      key_skills,
-      date_of_birth
+      gender,
+      address,
+      prn,
+      graduationYear,
+      degree,
+      department,
+      course,              
+      position,
+      company,
+      industry,
+      workEmail,
+      linkedin,
+      skills,
+      dob,
+      martialStatus
     } = UserData
+
+    if (!password) {
+      throw new Error("Password is required");
+    }
+    if (!email) {
+      throw new Error("Email is required");
+    }
+    if (!phone) {
+      throw new Error("Phone is required");
+    }
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -39,42 +50,43 @@ export async function register(UserData){
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
-          first_name: firstname,
-          last_name: lastname,
+          first_name: firstName,
+          last_name: lastName,
           email,
-          phone_number,
+          password:hashedPassword,
+          phone_number:phone,
           gender,
-          current_address,
-          password: hashedPassword,
+          current_address:address,
+          marital_status:martialStatus,
           department:{
-            connect:{department_id:department_id}
+            connect:{department_id:Number(department)}
           },
           course:{
-            connect:{course_id:course_id}
+            connect:{course_id:Number(course)}
           },
-          date_of_birth: new Date(date_of_birth) 
+          date_of_birth: new Date(dob) 
         }
       })
 
       await tx.academic_Detail.create({     
         data: {
           user_id: user.user_id,
-          prn_number,
-          graduation_year,
-          degree_id:degree_id,
-          department_id:department_id
+          prn_number:prn,
+          graduation_year:Number(graduationYear),
+          degree_id:Number(degree),
+          department_id:Number(department)
         }
       })
 
       await tx.professional_Detail.create({
         data:{
           user_id:user.user_id,
-          current_position,
-          company_name,
-          industry_id,
-          work_email,
-          linkedin_profile,
-          key_skills
+          current_position:position,
+          company_name:company,
+          industry_id:Number(industry),
+          work_email:workEmail,
+          linkedin_profile:linkedin,
+          key_skills:skills
         }
       })
 
