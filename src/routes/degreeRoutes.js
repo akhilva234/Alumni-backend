@@ -4,6 +4,6 @@ import { getDegreeContol } from '../controller/degree.controller.js'
 
 const router = express.Router()
 
-router.get('/degreelist',authenticate,getDegreeContol)
+router.get('/degreelist',getDegreeContol)
 
 export default router

@@ -4,6 +4,6 @@ import { getIndustryControl } from '../controller/industry.controller.js';
 
 const router = express.Router()
 
-router.get('/industrylist',authenticate,getIndustryControl)
+router.get('/industrylist',getIndustryControl)
 
 export default router

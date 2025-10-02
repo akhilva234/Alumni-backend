@@ -4,6 +4,6 @@ import { getCoursesControl } from '../controller/course.controller.js'
 
 const router = express.Router()
 
-router.get('/courselist',authenticate,getCoursesControl)
+router.get('/courselist',getCoursesControl)
 
 export default router

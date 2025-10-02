@@ -4,6 +4,6 @@ import { getDeptController} from '../controller/dept.controller.js';
 
 const router = express.Router()
 
-router.get('/deptdetails',authenticate,getDeptController)
+router.get('/deptdetails',getDeptController)
 
 export default router
