@@ -15,6 +15,7 @@ export async function register(UserData){
       gender,
       address,
       prn,
+      adm_year,
       graduationYear,
       degree,
       department,
@@ -39,6 +40,11 @@ export async function register(UserData){
       throw new Error("Phone is required");
     }
 
+    const existingPrn = await prisma.academic_Detail.findUnique({where:{prn_number:prn}})
+    if(existingPrn){
+      throw new Error("PRN already registered");
+    }
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
         throw new Error("Email already registered");
@@ -58,23 +64,21 @@ export async function register(UserData){
           gender,
           current_address:address,
           marital_status:martialStatus,
-          department:{
-            connect:{department_id:Number(department)}
-          },
-          course:{
-            connect:{course_id:Number(course)}
-          },
           date_of_birth: new Date(dob) 
         }
       })
 
       await tx.academic_Detail.create({     
         data: {
-          user_id: user.user_id,
+          user: {
+            connect: { user_id: user.user_id }
+          },
           prn_number:prn,
+          adm_year:Number(adm_year),
           graduation_year:Number(graduationYear),
-          degree_id:Number(degree),
-          department_id:Number(department)
+          course:{
+            connect:{course_id:Number(course)}
+          },
         }
       })
 

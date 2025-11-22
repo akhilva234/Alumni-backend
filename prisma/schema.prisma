@@ -19,8 +19,6 @@ model User {
   gender             String?
   current_address    String?
   password           String
-  department_id      Int
-  course_id          Int
   is_blocked         Boolean              @default(false)
   location           String?
 
@@ -31,21 +29,19 @@ model User {
   academicDetails    Academic_Detail[]
    externalEducation  External_Education[]
   professionalDetails Professional_Detail[]
-  course             Course                @relation(fields: [course_id], references: [course_id])
-  department         Department            @relation(fields: [department_id], references: [department_id])
+
 }
 
 model Academic_Detail {
   academic_id        Int         @id @default(autoincrement())
   user_id            Int
   prn_number         String      @unique
-  graduation_year    Int?
-  degree_id          Int?
-  department_id      Int?
+  adm_year           Int
+  graduation_year    Int
+  course_id          Int
   degree_certificate String?
-  degree             Degree?     @relation(fields: [degree_id], references: [degree_id])
-  department         Department? @relation(fields: [department_id], references: [department_id])
   user               User        @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  course             Course                @relation(fields: [course_id], references: [course_id])
 }
 
 model External_Education {
@@ -64,7 +60,6 @@ model External_Education {
 model Degree {
   degree_id       Int               @id @default(autoincrement())
   degree_name     String            @unique
-  academicDetails Academic_Detail[]
   externalEducation External_Education[]
   courses         Course[]
 }
@@ -72,10 +67,7 @@ model Degree {
 model Department {
   department_id   Int               @id @default(autoincrement())
   department_name String            @unique
-
-  academicDetails Academic_Detail[]
   courses         Course[]
-  users           User[]
 }
 
 model Course {
@@ -86,8 +78,8 @@ model Course {
   degree_id     Int
   department    Department @relation(fields: [department_id], references: [department_id])
   degree        Degree     @relation(fields: [degree_id], references: [degree_id])
-
-  users         User[]
+  academicDetails   Academic_Detail[]
+  
 }
 
 model Professional_Detail {
@@ -95,7 +87,7 @@ model Professional_Detail {
   user_id          Int
   current_position String?
   company_name     String?
-  experience       Int?          @default(0)
+  experience       Float?          @default(0)
   industry_id      Int?
   work_email       String?
   linkedin_profile String?
