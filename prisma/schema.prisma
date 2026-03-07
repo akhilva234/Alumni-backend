@@ -30,6 +30,18 @@ model User {
    externalEducation  External_Education[]
   professionalDetails Professional_Detail[]
 
+  // Relations for Posts
+  posts               Post[]
+  comments            Comment[]
+  likes               Like[]
+  
+  // Relations for Chats
+  groupMemberships    GroupMember[]
+  messagesSent        Message[]
+  
+  // Relations for Events & Donations
+  eventsOrganized     Event[]       @relation("EventOrganizer")
+  donations           Donation[]
 }
 
 model Academic_Detail {
@@ -68,6 +80,7 @@ model Department {
   department_id   Int               @id @default(autoincrement())
   department_name String            @unique
   courses         Course[]
+  chatGroups      ChatGroup[]
 }
 
 model Course {
@@ -120,4 +133,136 @@ enum MaritalStatus{
   Married
   Unmarried
   Divorced
+}
+
+// -----------------------------------------------------------------------------
+// POSTS (Feed & Jobs)
+// -----------------------------------------------------------------------------
+
+model Post {
+  post_id     Int       @id @default(autoincrement())
+  user_id     Int
+  content     String
+  image_url   String?
+  post_type   PostType  @default(GENERAL)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+}
+
+enum PostType {
+  GENERAL
+  JOB
+}
+
+model Comment {
+  comment_id  Int       @id @default(autoincrement())
+  post_id     Int
+  user_id     Int
+  content     String
+  created_at  DateTime  @default(now())
+
+  post        Post      @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+}
+
+model Like {
+  like_id     Int       @id @default(autoincrement())
+  post_id     Int
+  user_id     Int
+
+  post        Post      @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([post_id, user_id])
+}
+
+// -----------------------------------------------------------------------------
+// CHATS (Batch, Department, College Level)
+// -----------------------------------------------------------------------------
+
+model ChatGroup {
+  group_id      Int       @id @default(autoincrement())
+  name          String
+  group_type    GroupType
+  
+  // Optional identifiers for specific group types
+  department_id Int?
+  batch_year    Int?
+
+  created_at    DateTime  @default(now())
+
+  messages      Message[]
+  members       GroupMember[]
+  department    Department? @relation(fields: [department_id], references: [department_id])
+}
+
+enum GroupType {
+  COLLEGE
+  DEPARTMENT
+  BATCH
+}
+
+model GroupMember {
+  member_id     Int       @id @default(autoincrement())
+  group_id      Int
+  user_id       Int
+  joined_at     DateTime  @default(now())
+
+  group         ChatGroup @relation(fields: [group_id], references: [group_id], onDelete: Cascade)
+  user          User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([group_id, user_id])
+}
+
+model Message {
+  message_id    Int       @id @default(autoincrement())
+  group_id      Int
+  sender_id     Int
+  content       String
+  sent_at       DateTime  @default(now())
+
+  group         ChatGroup @relation(fields: [group_id], references: [group_id], onDelete: Cascade)
+  sender        User      @relation(fields: [sender_id], references: [user_id], onDelete: Cascade)
+}
+
+// -----------------------------------------------------------------------------
+// EVENTS & DONATIONS
+// -----------------------------------------------------------------------------
+
+model Event {
+  event_id      Int       @id @default(autoincrement())
+  title         String
+  description   String
+  event_date    DateTime
+  location      String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  organizer_id  Int
+  organizer     User      @relation("EventOrganizer", fields: [organizer_id], references: [user_id])
+
+  donations     Donation[]
+}
+
+model Donation {
+  donation_id   Int       @id @default(autoincrement())
+  event_id      Int
+  donor_id      Int
+  amount        Float
+  message       String?
+  donated_at    DateTime  @default(now())
+  status        DonationStatus @default(PENDING)
+
+  event         Event     @relation(fields: [event_id], references: [event_id], onDelete: Cascade)
+  donor         User      @relation(fields: [donor_id], references: [user_id], onDelete: Cascade)
+}
+
+enum DonationStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

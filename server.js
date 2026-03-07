@@ -6,9 +6,10 @@ import deptRoutes from './src/routes/departmentRoutes.js'
 import courseRoutes from './src/routes/courseRoutes.js'
 import degreeRoutes from './src/routes/degreeRoutes.js'
 import industryRoutes from './src/routes/industryRoutes.js'
+import postRoutes from './src/routes/postRoutes.js'
 import cors from "cors";
 
-const app =  express()
+const app = express()
 
 
 const PORT = process.env.PORT || 5000
@@ -20,19 +21,20 @@ app.use(express.urlencoded({ extended: true }));
 
 //endpoints
 
-app.use('/auth',authRoutes)
-app.use('/profile',userRoutes)
-app.use('/department',deptRoutes)
-app.use('/courses',courseRoutes)
-app.use('/degree',degreeRoutes)
-app.use('/industries',industryRoutes)
+app.use('/auth', authRoutes)
+app.use('/profile', userRoutes)
+app.use('/department', deptRoutes)
+app.use('/courses', courseRoutes)
+app.use('/degree', degreeRoutes)
+app.use('/industries', industryRoutes)
+app.use('/posts', postRoutes)
 
 //testing middleware
 //app.use('/test',testRoute)
 
 // App listening
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
 
     console.log(`Server running on ${PORT}`)
 })
