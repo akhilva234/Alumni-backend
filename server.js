@@ -7,6 +7,7 @@ import courseRoutes from './src/routes/courseRoutes.js'
 import degreeRoutes from './src/routes/degreeRoutes.js'
 import industryRoutes from './src/routes/industryRoutes.js'
 import postRoutes from './src/routes/postRoutes.js'
+import adminRoutes from './src/routes/adminRoutes.js'
 import cors from "cors";
 
 const app = express()
@@ -28,6 +29,7 @@ app.use('/courses', courseRoutes)
 app.use('/degree', degreeRoutes)
 app.use('/industries', industryRoutes)
 app.use('/posts', postRoutes)
+app.use('/admin', adminRoutes)
 
 //testing middleware
 //app.use('/test',testRoute)

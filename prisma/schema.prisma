@@ -42,6 +42,9 @@ model User {
   // Relations for Events & Donations
   eventsOrganized     Event[]       @relation("EventOrganizer")
   donations           Donation[]
+
+  // Faculty subtype profile
+  facultyProfile      Faculty_Profile?
 }
 
 model Academic_Detail {
@@ -81,6 +84,7 @@ model Department {
   department_name String            @unique
   courses         Course[]
   chatGroups      ChatGroup[]
+  facultyProfiles Faculty_Profile[]
 }
 
 model Course {
@@ -114,6 +118,16 @@ model Industry {
   industry_id   Int                   @id @default(autoincrement())
   industry_name String                @unique
   professionals Professional_Detail[]
+}
+
+// Faculty department association (subtype table — same pattern as Academic_Detail)
+model Faculty_Profile {
+  profile_id    Int        @id @default(autoincrement())
+  user_id       Int        @unique               // one profile per faculty
+  department_id Int
+  joined_date   DateTime?                        // optional: when they joined the dept
+  user          User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  department    Department @relation(fields: [department_id], references: [department_id])
 }
 
 enum Role {
