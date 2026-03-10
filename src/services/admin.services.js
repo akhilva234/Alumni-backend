@@ -136,41 +136,68 @@ export async function getFacultyDepartmentIds(facultyUserId) {
 // ─── Dashboard Stats ──────────────────────────────────────────────────────────
 
 
-export async function getDashboardStats() {
+export async function getDashboardStats(caller = {}) {
+    const isFaculty = caller.role === "FACULTY" || caller.role === "RETD_FACULTY";
+    const isAdmin = caller.role === "ADMIN";
     const now = new Date();
+
+    let facultyDeptIds = null;
+    if (isFaculty) {
+        facultyDeptIds = await getFacultyDepartmentIds(caller.userId);
+    }
+
+    const alumniWhere = {
+        role: "ALUMNI",
+        approved_status: "APPROVED",
+        ...(facultyDeptIds ? {
+            academicDetails: {
+                some: { course: { department_id: { in: facultyDeptIds } } }
+            }
+        } : {})
+    };
+
+    const jobWhere = {
+        post_type: "JOB",
+        ...(facultyDeptIds ? {
+            user: {
+                academicDetails: {
+                    some: { course: { department_id: { in: facultyDeptIds } } }
+                }
+            }
+        } : {})
+    };
+
+    const eventWhere = {
+        event_date: { gte: now },
+        ...(isFaculty ? { organizer_id: caller.userId } : {})
+    };
 
     const [totalAlumni, upcomingEvents, activeJobs, totalFaculty] =
         await Promise.all([
-            // Approved alumni only
-            prisma.user.count({
-                where: { role: "ALUMNI", approved_status: "APPROVED" },
-            }),
-            // Events in the future
-            prisma.event.count({
-                where: { event_date: { gte: now } },
-            }),
-            // Posts of type JOB
-            prisma.post.count({
-                where: { post_type: "JOB" },
-            }),
-            // Active + retired faculty
+            // Approved alumni count (optionally scoped)
+            prisma.user.count({ where: alumniWhere }),
+            // Events organized count (optionally scoped)
+            prisma.event.count({ where: eventWhere }),
+            // Job posts count (optionally scoped)
+            prisma.post.count({ where: jobWhere }),
+            // Total faculty count (global)
             prisma.user.count({
                 where: { role: { in: ["FACULTY", "RETD_FACULTY"] } },
             }),
         ]);
 
-    // Most recent job post
+    // Most recent job post (scoped)
     const recentJob = await prisma.post.findFirst({
-        where: { post_type: "JOB" },
+        where: jobWhere,
         orderBy: { created_at: "desc" },
         include: {
             user: { select: { first_name: true, last_name: true, role: true } },
         },
     });
 
-    // Most recent upcoming event
+    // Most recent upcoming event (scoped)
     const recentEvent = await prisma.event.findFirst({
-        where: { event_date: { gte: now } },
+        where: eventWhere,
         orderBy: { event_date: "asc" },
     });
 
@@ -283,6 +310,8 @@ export async function getPendingRequests(caller = {}) {
                 select: {
                     graduation_year: true,
                     adm_year: true,
+                    prn_number: true,
+                    degree_certificate: true,
                     course: {
                         select: {
                             course_name: true,
@@ -368,7 +397,7 @@ export async function getAllEvents(caller = {}) {
 }
 
 export async function createEvent(organizerId, data) {
-    const { title, description, event_date, location } = data;
+    const { title, description, event_date, event_time, location, image_url } = data;
 
     if (!title || !description || !event_date) {
         throw new Error("title, description, and event_date are required");
@@ -378,7 +407,9 @@ export async function createEvent(organizerId, data) {
         data: {
             title,
             description,
+            image_url: image_url || null,
             event_date: new Date(event_date),
+            event_time: event_time || null,
             location: location || null,
             organizer_id: organizerId,
         },
@@ -386,7 +417,7 @@ export async function createEvent(organizerId, data) {
 }
 
 export async function updateEvent(eventId, data, caller = {}) {
-    const { title, description, event_date, location } = data;
+    const { title, description, event_date, event_time, location, image_url } = data;
     const isFaculty = caller.role === "FACULTY" || caller.role === "RETD_FACULTY";
 
     // Faculty can only edit events they organized
@@ -402,7 +433,9 @@ export async function updateEvent(eventId, data, caller = {}) {
         data: {
             ...(title && { title }),
             ...(description && { description }),
+            ...(image_url !== undefined && { image_url }),
             ...(event_date && { event_date: new Date(event_date) }),
+            ...(event_time !== undefined && { event_time }),
             ...(location !== undefined && { location }),
         },
     });
@@ -489,4 +522,16 @@ export async function deleteJobPost(postId) {
         throw new Error("Job post not found");
     }
     return prisma.post.delete({ where: { post_id: postId } });
+}
+
+export async function getEventById(eventId) {
+    return prisma.event.findUnique({
+        where: { event_id: eventId },
+        include: {
+            organizer: {
+                select: { first_name: true, last_name: true },
+            },
+            _count: { select: { donations: true } },
+        },
+    });
 }

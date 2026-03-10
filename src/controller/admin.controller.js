@@ -4,7 +4,8 @@ import * as adminService from "../services/admin.services.js";
 
 export async function getDashboardStats(req, res) {
     try {
-        const stats = await adminService.getDashboardStats();
+        const caller = { userId: req.user.id, role: req.user.role };
+        const stats = await adminService.getDashboardStats(caller);
         res.json(stats);
     } catch (err) {
         res.status(500).json({ message: "Failed to fetch stats", error: err.message });
@@ -137,6 +138,17 @@ export async function deleteEvent(req, res) {
     } catch (err) {
         const status = err.message.includes("only delete") ? 403 : 500;
         res.status(status).json({ message: err.message });
+    }
+}
+
+export async function getEventById(req, res) {
+    try {
+        const eventId = parseInt(req.params.eventId);
+        const event = await adminService.getEventById(eventId);
+        if (!event) return res.status(404).json({ message: "Event not found" });
+        res.json(event);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch event", error: err.message });
     }
 }
 

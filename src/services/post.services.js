@@ -52,3 +52,27 @@ export async function getAllPosts() {
 
     return posts;
 }
+
+export async function updatePost(postId, userId, data) {
+    const { content, image_url } = data;
+
+    const post = await prisma.post.findUnique({ where: { post_id: postId } });
+    if (!post) throw new Error("Post not found");
+    if (post.user_id !== userId) throw new Error("You can only edit your own posts");
+
+    return prisma.post.update({
+        where: { post_id: postId },
+        data: {
+            ...(content && { content }),
+            ...(image_url !== undefined && { image_url }),
+        },
+    });
+}
+
+export async function deletePost(postId, userId) {
+    const post = await prisma.post.findUnique({ where: { post_id: postId } });
+    if (!post) throw new Error("Post not found");
+    if (post.user_id !== userId) throw new Error("You can only delete your own posts");
+
+    return prisma.post.delete({ where: { post_id: postId } });
+}

@@ -10,6 +10,7 @@ import {
     updateFaculty,
     deleteFaculty,
     getEvents,
+    getEventById,
     createEvent,
     updateEvent,
     deleteEvent,
@@ -23,8 +24,8 @@ const router = express.Router();
 // All admin routes require at minimum authentication
 router.use(authenticate);
 
-// ─── Stats (admin only) ───────────────────────────────────────────────────────
-router.get("/stats", authorizeRoles("ADMIN"), getDashboardStats);
+// ─── Stats (admin + faculty) ──────────────────────────────────────────────────
+router.get("/stats", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY"), getDashboardStats);
 
 // ─── Alumni — admin + faculty (faculty see own dept only) ─────────────────────
 router.get("/alumni", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY"), getAlumni);
@@ -43,7 +44,8 @@ router.put("/faculty/:userId", authorizeRoles("ADMIN"), updateFaculty);
 router.delete("/faculty/:userId", authorizeRoles("ADMIN"), deleteFaculty);
 
 // ─── Events — admin + faculty (faculty CRUD their own events only) ────────────
-router.get("/events", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY"), getEvents);
+router.get("/events", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY", "ALUMNI"), getEvents);
+router.get("/events/:eventId", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY", "ALUMNI"), getEventById);
 router.post("/events", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY"), createEvent);
 router.put("/events/:eventId", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY"), updateEvent);
 router.delete("/events/:eventId", authorizeRoles("ADMIN", "FACULTY", "RETD_FACULTY"), deleteEvent);
