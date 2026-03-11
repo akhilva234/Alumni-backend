@@ -16,6 +16,11 @@ export async function register(req,res,next){
     }
 }
 
+//logout
+export async function logout(req, res) {
+    res.json({ success: true, message: "Logged out successfully" });
+}
+
 export async function login(req,res,next) {
     try{
         const data = await authService.login(req.body);

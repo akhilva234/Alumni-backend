@@ -45,6 +45,9 @@ model User {
 
   // Faculty subtype profile
   facultyProfile      Faculty_Profile?
+
+  // Principal subtype profile
+  principalProfile    Principal_Profile?
 }
 
 model Academic_Detail {
@@ -130,11 +133,24 @@ model Faculty_Profile {
   department    Department @relation(fields: [department_id], references: [department_id])
 }
 
+// Principal association (subtype table)
+model Principal_Profile {
+  profile_id    Int        @id @default(autoincrement())
+  user_id       Int        @unique               // one profile per principal
+  department    String?
+  joined_date   DateTime
+  end_date      DateTime?
+  status        String     @default("active")    // "active" or "inactive"
+  user          User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+}
+
 enum Role {
   ADMIN
   ALUMNI
   FACULTY
   RETD_FACULTY
+  PRINCIPAL
+  EX_PRINCIPAL
 }
 
 enum ApprovedStatus {

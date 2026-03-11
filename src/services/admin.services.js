@@ -135,6 +135,143 @@ export async function getFacultyDepartmentIds(facultyUserId) {
 
 // ─── Dashboard Stats ──────────────────────────────────────────────────────────
 
+// ─── Principal CRUD (admin-managed) ──────────────────────────────────────────
+
+export async function getAllPrincipals() {
+    return prisma.user.findMany({
+        where: { role: { in: ["PRINCIPAL", "EX_PRINCIPAL"] } },
+        select: {
+            user_id: true,
+            first_name: true,
+            last_name: true,
+            email: true,
+            phone_number: true,
+            user_photo: true,
+            principalProfile: {
+                select: {
+                    department: true,
+                    joined_date: true,
+                    end_date: true,
+                    status: true,
+                },
+            },
+        },
+        orderBy: { user_id: "desc" },
+    });
+}
+
+export async function createPrincipal(data) {
+    const {
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        date_of_birth,
+        password,
+        department,
+        profilePic,
+    } = data;
+
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) throw new Error("Email already registered");
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    return prisma.$transaction(async (tx) => {
+        // 1. Fetch current active principals to find their user_ids
+        const activeProfiles = await tx.principal_Profile.findMany({
+             where: { status: "active" },
+             select: { user_id: true }
+        });
+
+        if (activeProfiles.length > 0) {
+            const activeUserIds = activeProfiles.map(p => p.user_id);
+            
+            // Unset current active profiles
+            await tx.principal_Profile.updateMany({
+                where: { user_id: { in: activeUserIds } },
+                data: { status: "inactive", end_date: new Date() },
+            });
+
+            // Update their user role to EX_PRINCIPAL
+            await tx.user.updateMany({
+                where: { user_id: { in: activeUserIds } },
+                data: { role: "EX_PRINCIPAL" }
+            });
+        }
+
+        // 2. Create the new User row
+        const user = await tx.user.create({
+            data: {
+                first_name,
+                last_name,
+                email,
+                phone_number,
+                date_of_birth: new Date(date_of_birth),
+                password: hashedPassword,
+                role: "PRINCIPAL",
+                approved_status: "APPROVED",
+                user_photo: profilePic || null,
+            },
+            select: {
+                user_id: true,
+                first_name: true,
+                last_name: true,
+                email: true,
+                phone_number: true,
+                user_photo: true,
+            },
+        });
+
+        // 3. Create their associated profile
+        const profile = await tx.principal_Profile.create({
+            data: {
+                user_id: user.user_id,
+                department: department || null,
+                joined_date: new Date(),
+                status: "active",
+            },
+        });
+
+        return { ...user, principalProfile: profile };
+    });
+}
+
+export async function updatePrincipal(userId, data) {
+    const { first_name, last_name, email, phone_number, department, profilePic } = data;
+
+    return prisma.$transaction(async (tx) => {
+        const user = await tx.user.update({
+            where: { user_id: userId },
+            data: {
+                ...(first_name && { first_name }),
+                ...(last_name && { last_name }),
+                ...(email && { email }),
+                ...(phone_number && { phone_number }),
+                ...(profilePic !== undefined && { user_photo: profilePic }),
+            },
+            select: {
+                user_id: true,
+                first_name: true,
+                last_name: true,
+                email: true,
+                phone_number: true,
+                user_photo: true,
+            },
+        });
+
+        if (department !== undefined) {
+             await tx.principal_Profile.update({
+                 where: { user_id: userId },
+                 data: { department },
+             });
+        }
+
+        return user;
+    });
+}
+
+
 
 export async function getDashboardStats(caller = {}) {
     const isFaculty = caller.role === "FACULTY" || caller.role === "RETD_FACULTY";

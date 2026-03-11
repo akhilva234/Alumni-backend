@@ -95,6 +95,36 @@ export async function deleteFaculty(req, res) {
 }
 
 
+// ─── Principal ────────────────────────────────────────────────────────────────
+
+export async function getPrincipals(req, res) {
+    try {
+        const principals = await adminService.getAllPrincipals();
+        res.json(principals);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch principals", error: err.message });
+    }
+}
+
+export async function createPrincipal(req, res) {
+    try {
+        const principal = await adminService.createPrincipal(req.body);
+        res.status(201).json({ message: "Principal created successfully", principal });
+    } catch (err) {
+        res.status(400).json({ message: "Failed to create principal", error: err.message });
+    }
+}
+
+export async function updatePrincipal(req, res) {
+    try {
+        const userId = parseInt(req.params.userId);
+        const principal = await adminService.updatePrincipal(userId, req.body);
+        res.json({ message: "Principal updated successfully", principal });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to update principal", error: err.message });
+    }
+}
+
 // ─── Events ───────────────────────────────────────────────────────────────────
 
 export async function getEvents(req, res) {
